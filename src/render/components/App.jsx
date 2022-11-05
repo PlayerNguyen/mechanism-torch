@@ -4,11 +4,14 @@ import Sidebar from "./Sidebar/Sidebar";
 
 export default function App() {
   return (
-    <div className="app-container fixed w-full h-full bg-stone-400">
+    <div className="app-container fixed w-full h-full bg-neutral-500">
       {/* Head bar */}
       <Headbar />
-      {/* Sidebar */}
-      <Sidebar />
+
+      <div className="app-content">
+        {/* Sidebar */}
+        <Sidebar />
+      </div>
 
       {/*  */}
     </div>

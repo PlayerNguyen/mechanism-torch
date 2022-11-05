@@ -7,9 +7,8 @@ import "./Headbar.scss";
 export default function Headbar() {
   return (
     <div
-      className="headbar w-full h-[32px] bg-neutral-300"
+      className="headbar w-full h-[32px] bg-neutral-100 shadow-md z-10"
       onDoubleClick={() => {
-        // alert("heyy");
         window.api.toggleMaximize();
       }}
     ></div>
