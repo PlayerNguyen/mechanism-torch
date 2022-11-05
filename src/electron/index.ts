@@ -7,6 +7,15 @@ function createBrowserWindow() {
   const window = new BrowserWindow({
     width: 800,
     height: 600,
+    minWidth: 800,
+    minHeight: 600,
+    titleBarStyle: "hidden",
+
+    trafficLightPosition: {
+      x: 6,
+      y: 6,
+    },
+
     webPreferences: {
       devTools: true,
       preload: path.resolve(
