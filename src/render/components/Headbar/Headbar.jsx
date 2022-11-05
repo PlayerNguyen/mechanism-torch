@@ -9,7 +9,8 @@ export default function Headbar() {
     <div
       className="headbar w-full h-[32px] bg-neutral-300"
       onDoubleClick={() => {
-        alert("heyy");
+        // alert("heyy");
+        window.api.toggleMaximize();
       }}
     ></div>
   );

@@ -2,6 +2,9 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import { isDevelopment } from "./utils/Environment";
 import path from "path";
 import { getInternalAppPath } from "./utils/File";
+import ApplicationHandler from "./event/Handler";
+
+let applicationHandler: ApplicationHandler = ApplicationHandler.createHandler();
 
 function createBrowserWindow() {
   const window = new BrowserWindow({
@@ -28,9 +31,9 @@ function createBrowserWindow() {
   });
 
   window.setTitle("Mechanism Torch");
-  ipcMain.handle(`ping`, () => {
-    console.log(`ping from browser`);
-  });
+  // applicationHandler = new ApplicationHandler(window);
+  applicationHandler.register();
+
   // Load the url or file
   isDevelopment()
     ? window.loadURL("http://localhost:1234")
@@ -48,6 +51,10 @@ app.on("ready", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createBrowserWindow();
     }
+  });
+
+  window.on("close", () => {
+    applicationHandler.unregister();
   });
 });
 
