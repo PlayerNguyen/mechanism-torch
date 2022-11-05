@@ -1,0 +1,46 @@
+{
+  "name": "mechanism-torch",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "./dist/main/index.js",
+  "scripts": {
+    "watch": "cross-env NODE_ENV=development node ./scripts/watch",
+    "start": "node ./scripts/build && node ./scripts/start",
+    "build": "node ./scripts/build",
+    "package": "node ./scripts/pack.js"
+  },
+  "devDependencies": {
+    "@parcel/config-default": "^2.7.0",
+    "@parcel/core": "^2.7.0",
+    "@parcel/transformer-sass": "^2.7.0",
+    "autoprefixer": "^10.4.13",
+    "chalk": "4.1.2",
+    "cross-env": "^7.0.3",
+    "electron-packager": "^17.1.1",
+    "postcss": "^8.4.18",
+    "process": "^0.11.10",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwindcss": "^3.2.2"
+  },
+  "dependencies": {
+    "electron": "^21.2.2"
+  },
+  "targets": {
+    "main": {
+      "context": "node",
+      "engines": {
+        "source": "./src/electron/index.js"
+      },
+      "distDir": "./dist/main"
+    },
+    "render": {
+      "context": "browser",
+      "engines": {
+        "source": "./src/render/index.html"
+      },
+      "distDir": "./dist/render",
+      "publicUrl": "./"
+    }
+  }
+}
