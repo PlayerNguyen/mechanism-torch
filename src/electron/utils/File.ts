@@ -67,3 +67,7 @@ export abstract class MemoryStorage implements Storage {
 
   abstract saveTo(path: string): void;
 }
+
+export function getManifestFilePath(): string {
+  return path.join(getLauncherPath(), "manifest", "manifest.json");
+}

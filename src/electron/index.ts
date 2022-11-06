@@ -1,18 +1,26 @@
 import { app, BrowserWindow } from "electron";
-import { getConfiguration } from "./config/Configuration";
-import { setupLauncherDirectory } from "./utils/File";
+import { initManifestData } from "./assets/Asset";
+import { getConfiguration } from "./configs/Configuration";
+import { getConfigurationFilePath, setupLauncherDirectory } from "./utils/File";
 import { createMainBrowserWindow } from "./Window";
 
 (async () => {
   setupLauncherDirectory();
-
+  const configuration = getConfiguration();
+  await initManifestData();
+  
   app.on("ready", async () => {
-    const _w = createMainBrowserWindow();
+    let mainBrowser = createMainBrowserWindow();
 
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) {
-        createMainBrowserWindow();
+        mainBrowser = createMainBrowserWindow();
       }
+    });
+
+    app.on("before-quit", () => {
+      // Save the configuration before quit application
+      configuration.saveTo(getConfigurationFilePath());
     });
   });
 

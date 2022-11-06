@@ -2,7 +2,7 @@ import path from "path";
 import { BrowserWindow } from "electron";
 import { isDevelopment } from "./utils/Environment";
 import { getInternalAppPath } from "./utils/File";
-import ApplicationHandler from "./event/Handler";
+import ApplicationHandler from "./events/Handler";
 
 let applicationHandler: ApplicationHandler = ApplicationHandler.createHandler();
 export class MainBrowserWindow extends BrowserWindow {

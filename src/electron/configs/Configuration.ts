@@ -2,21 +2,18 @@ import { existsSync, writeFileSync, readFileSync } from "fs";
 import { getConfigurationFilePath, MemoryStorage } from "../utils/File";
 
 const DefaultConfiguration = {
-  CurrentTheme: "default",
+  AutoUpdate: true,
 };
 
 export class ConfigurationProvider extends MemoryStorage {
   constructor() {
     super();
-    // Read configuration and read as hash map
-    // If not found, create a default configuration
-    if (!this.hasConfigurationFile()) {
-      this.loadDefaultConfiguration();
-      // Then save to the configuration file
-      this.saveTo(getConfigurationFilePath());
-    } else {
-      this.loadConfiguration();
-    }
+
+    this.loadDefaultConfiguration();
+
+    if (!this.hasConfigurationFile()) this.saveTo(getConfigurationFilePath());
+
+    this.loadConfiguration();
   }
 
   private loadDefaultConfiguration() {
@@ -24,7 +21,10 @@ export class ConfigurationProvider extends MemoryStorage {
 
     let propertyName: keyof typeof DefaultConfiguration;
     for (propertyName in DefaultConfiguration) {
-      this.setValue(propertyName, DefaultConfiguration[propertyName]);
+      if (!this.hasValue(propertyName)) {
+        console.log(`Registering property ${propertyName}`);
+        this.setValue(propertyName, DefaultConfiguration[propertyName]);
+      }
     }
   }
 
