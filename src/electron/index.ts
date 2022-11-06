@@ -16,7 +16,7 @@ function createBrowserWindow() {
 
     trafficLightPosition: {
       x: 6,
-      y: 6,
+      y: 12.5,
     },
 
     webPreferences: {

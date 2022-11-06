@@ -10,14 +10,12 @@ class ApplicationHandler {
   private static handler: ApplicationHandler;
 
   constructor() {
-    // this.window = window;
     this.handlerList = [];
 
     this.handlerList.push(new ToggleMaximizeHandler());
   }
 
   public register() {
-    console.log(this.registeredId);
     // The function that register an application handler
     for (let value of this.handlerList) {
       if (!this.registeredId.has(value.channelId)) {
@@ -50,7 +48,6 @@ class ApplicationHandler {
 
 class ToggleMaximizeHandler implements Handler {
   channelId: string = "toggleMaximize";
-  
 
   constructor() {}
 

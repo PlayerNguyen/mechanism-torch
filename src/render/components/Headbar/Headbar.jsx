@@ -7,7 +7,7 @@ import "./Headbar.scss";
 export default function Headbar() {
   return (
     <div
-      className="headbar w-full h-[32px] bg-neutral-100 shadow-md z-10"
+      className="headbar w-full h-[48px] bg-neutral-100 z-50 shadow-md"
       onDoubleClick={() => {
         window.api.toggleMaximize();
       }}
