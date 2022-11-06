@@ -1,6 +1,7 @@
 // const { Parcel } = require("@parcel/core");
 // const chalk = require("chalk");
-import { rmdirSync, rmSync } from "fs";
+import chalk from "chalk";
+import { rmSync } from "fs";
 import { visibleDiagnostics } from "./resolver.js";
 import { Parcel } from "@parcel/core";
 
@@ -53,7 +54,7 @@ async function buildApplication() {
 
     await bundle(mainBundler, "main");
   } catch (err) {
-    // console.log(err.stack);
+    console.log(err.stack);
     if (err.diagnostics) {
       visibleDiagnostics(err.diagnostics);
     }
