@@ -2,6 +2,7 @@
   "name": "mechanism-torch",
   "version": "1.0.0",
   "license": "MIT",
+  "type": "module",
   "main": "./dist/main/index.js",
   "scripts": {
     "watch": "cross-env NODE_ENV=development node ./scripts/watch",
@@ -32,7 +33,8 @@
     "main": {
       "context": "node",
       "engines": {
-        "source": "./src/electron/index.js"
+        "source": "./src/electron/index.js",
+        "outputFormat": "esmodule"
       },
       "distDir": "./dist/main"
     },
