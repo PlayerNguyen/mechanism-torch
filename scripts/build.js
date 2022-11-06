@@ -1,5 +1,4 @@
-import { buildApplication } from "./utils/build.js";
-
+const { buildApplication } = require("./utils/build");
 (async () => {
   await buildApplication();
 })();

@@ -1,7 +1,7 @@
-import chalk from "chalk";
-import { spawn } from "child_process";
-import { existsSync } from "fs";
-import path from "path";
+const chalk = require("chalk");
+const { spawn } = require("child_process");
+const { existsSync } = require("fs");
+const path = require("path");
 
 function getElectronPath() {
   return path.join(
@@ -37,4 +37,4 @@ async function spawnElectron() {
   return _process;
 }
 
-export { spawnElectron };
+module.exports = { spawnElectron };

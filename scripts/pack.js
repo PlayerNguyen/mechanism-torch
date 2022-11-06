@@ -1,5 +1,5 @@
-import packager from "electron-packager";
-import { buildApplication } from "./utils/build.js";
+const packager = require("electron-packager");
+const { buildApplication } = require("./utils/build");
 
 async function packApplication() {
   packager({

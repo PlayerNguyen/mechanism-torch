@@ -1,4 +1,4 @@
-import chalk from "chalk";
+const chalk = require("chalk");
 
 function visibleDiagnostics(diagnostics, prefix) {
   prefix = prefix === undefined ? "Builder" : prefix;
@@ -16,4 +16,4 @@ function visibleDiagnostics(diagnostics, prefix) {
   });
 }
 
-export { visibleDiagnostics };
+module.exports = { visibleDiagnostics };

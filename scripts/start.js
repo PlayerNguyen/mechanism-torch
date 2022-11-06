@@ -1,4 +1,4 @@
-import { spawnElectron } from "./start-electron";
+const { spawnElectron } = require("./start-electron");
 
 (async () => {
   try {

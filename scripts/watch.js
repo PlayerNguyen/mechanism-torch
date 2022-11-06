@@ -1,8 +1,8 @@
-import { Parcel } from "@parcel/core";
-import chalk from "chalk";
-import { spawnElectron } from "./start-electron.js";
-import { cleanUpBuild } from "./utils/build.js";
-import { visibleDiagnostics } from "./utils/resolver.js";
+const { Parcel } = require("@parcel/core");
+const chalk = require("chalk");
+const { spawnElectron } = require("./start-electron.js");
+const { cleanUpBuild } = require("./utils/build.js");
+const { visibleDiagnostics } = require("./utils/resolver.js");
 
 let renderBundler = new Parcel({
   entries: "./src/render/index.html",
