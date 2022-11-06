@@ -1,5 +1,5 @@
 import { ipcMain, BrowserWindow } from "electron";
-interface Handler {
+export interface Handler {
   channelId: string;
   onHandle: (...args: any[]) => any;
 }

@@ -1,65 +1,24 @@
-import { app, BrowserWindow, ipcMain } from "electron";
-import { isDevelopment } from "./utils/Environment";
-import path from "path";
-import { getInternalAppPath } from "./utils/File";
-import ApplicationHandler from "./event/Handler";
+import { app, BrowserWindow } from "electron";
+import { getConfiguration } from "./config/Configuration";
+import { setupLauncherDirectory } from "./utils/File";
+import { createMainBrowserWindow } from "./Window";
 
-let applicationHandler: ApplicationHandler = ApplicationHandler.createHandler();
+(async () => {
+  setupLauncherDirectory();
 
-function createBrowserWindow() {
-  const window = new BrowserWindow({
-    width: 800,
-    height: 600,
-    minWidth: 800,
-    minHeight: 600,
-    titleBarStyle: "hidden",
+  app.on("ready", async () => {
+    const _w = createMainBrowserWindow();
 
-    trafficLightPosition: {
-      x: 6,
-      y: 12.5,
-    },
-
-    webPreferences: {
-      devTools: true,
-      preload: path.resolve(
-        getInternalAppPath(),
-        "src",
-        "electron",
-        "preload.js"
-      ),
-    },
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        createMainBrowserWindow();
+      }
+    });
   });
 
-  window.setTitle("Mechanism Torch");
-  // applicationHandler = new ApplicationHandler(window);
-  applicationHandler.register();
-
-  // Load the url or file
-  isDevelopment()
-    ? window.loadURL("http://localhost:1234")
-    : window.loadFile(
-        path.resolve(getInternalAppPath(), "dist", "render", "index.html")
-      );
-
-  return window;
-}
-
-app.on("ready", () => {
-  const window = createBrowserWindow();
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createBrowserWindow();
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
     }
   });
-
-  window.on("close", () => {
-    applicationHandler.unregister();
-  });
-});
-
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+})();
