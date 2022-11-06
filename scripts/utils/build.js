@@ -1,7 +1,8 @@
-const { Parcel } = require("@parcel/core");
-const chalk = require("chalk");
-const { rmdirSync, rmSync } = require("fs");
-const { visibleDiagnostics } = require("./resolver");
+// const { Parcel } = require("@parcel/core");
+// const chalk = require("chalk");
+import { rmdirSync, rmSync } from "fs";
+import { visibleDiagnostics } from "./resolver.js";
+import { Parcel } from "@parcel/core";
 
 let renderBundler = new Parcel({
   entries: "./src/render/index.html",
@@ -59,4 +60,4 @@ async function buildApplication() {
   }
 }
 
-module.exports = { buildApplication, cleanUpBuild };
+export { buildApplication, cleanUpBuild };
