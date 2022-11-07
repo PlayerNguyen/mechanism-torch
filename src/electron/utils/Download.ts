@@ -12,7 +12,7 @@ export async function download(url: string, options?: RequestInit | any) {
  *
  * @param url an url to get data
  * @param dest the destination to stream the file to
- * @returns a promise resolve response.body
+ * @returns a promise resolve the response
  */
 export async function downloadIntoDestination(
   url: string,
