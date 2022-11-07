@@ -1,5 +1,5 @@
 import { app, BrowserWindow } from "electron";
-import { initManifestData } from "./assets/Asset";
+import { initializeProfile, initializeVersionManifest } from "./assets/Asset";
 import { getConfiguration } from "./configs/Configuration";
 import { getConfigurationFilePath, setupLauncherDirectory } from "./utils/File";
 import { createMainBrowserWindow } from "./Window";
@@ -7,7 +7,8 @@ import { createMainBrowserWindow } from "./Window";
 (async () => {
   setupLauncherDirectory();
   const configuration = getConfiguration();
-  await initManifestData();
+  await initializeVersionManifest();
+  await initializeProfile();
 
   app.on("ready", async () => {
     let mainBrowser = createMainBrowserWindow();

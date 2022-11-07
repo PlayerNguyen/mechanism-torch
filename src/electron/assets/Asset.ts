@@ -1,6 +1,6 @@
 import stream from "stream";
 import { existsSync, mkdirSync } from "fs";
-import { getManifestFilePath } from "../utils/File";
+import { getManifestFilePath, getProfileFilePath } from "../utils/File";
 import { hasConnection, isDevelopment } from "../utils/Environment";
 import { download, downloadIntoDestination } from "../utils/Download";
 import path from "path";
@@ -9,13 +9,12 @@ import { Import } from "../Import";
 
 interface Asset {}
 
-export async function initManifestData() {
+export async function initializeVersionManifest() {
   // Check if directory was created
   const dir = path.dirname(getManifestFilePath());
 
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
   // Debug connection test
-  
 
   // No connection
   if (!(await hasConnection())) {
@@ -60,7 +59,9 @@ class ManifestInterceptor {
       let build = ""; // Set into memory
       manifestDataStream.on("data", (chunk) => {
         isDevelopment() &&
-          console.log(`Piping version manifest data; ${chunk.length} byte(s)`);
+          console.log(
+            `[Asset::ManifestInterceptor] Piping version manifest data; ${chunk.length} byte(s)`
+          );
         build += chunk;
       });
 
@@ -135,11 +136,118 @@ export class GlobalVersionManifest {
   }
 }
 
-interface LauncherProfile {
+interface LauncherProfileNode {
   name: string;
   version: string;
 }
 
-export function initProfile() {
-  // TODO: follow task to create profile interceptor
+export async function initializeProfile() {
+  if (!fs.existsSync(getProfileFilePath())) {
+    const latestReleaseMinecraftVersion =
+      GlobalVersionManifest.getInstance().getManifest()?.latest.release;
+
+    if (!latestReleaseMinecraftVersion) {
+      throw new Error("Manifest not found");
+    }
+
+    await LauncherProfile.getInstance().loadDefault(
+      latestReleaseMinecraftVersion
+    );
+    return;
+  }
+
+  // Load the profile from local storage
+  await LauncherProfile.getInstance().loadFromFile();
+}
+
+export class LauncherProfile {
+  public profiles: LauncherProfileNode[] = [];
+
+  constructor(profiles?: LauncherProfileNode[]) {
+    this.profiles = !profiles ? [] : profiles;
+  }
+
+  addProfile(profile: LauncherProfileNode) {
+    this.profiles = [...this.profiles, profile];
+  }
+
+  removeProfile(
+    predicate: (
+      profile: LauncherProfileNode,
+      index: number,
+      profiles: LauncherProfileNode[]
+    ) => unknown
+  ) {
+    this.profiles = this.profiles.filter(predicate);
+  }
+
+  async loadDefault(latestVersion: string) {
+    console.log(`Initializing default launcher profile`);
+    // Check version manifest for the latest
+    this.profiles = [
+      {
+        name: "Latest",
+        version: latestVersion,
+      },
+    ];
+
+    await ProfileInterceptor.write(this);
+  }
+
+  async loadFromFile() {
+    const _ = await ProfileInterceptor.read();
+
+    // Set the profiles into local variable
+    this.profiles = _;
+  }
+
+  static profileInstance: LauncherProfile;
+
+  static getInstance(): LauncherProfile {
+    if (this.profileInstance === undefined || this.profileInstance === null)
+      this.profileInstance = new LauncherProfile();
+
+    return this.profileInstance;
+  }
+}
+
+class ProfileInterceptor {
+  private static serialize(profile: LauncherProfile) {
+    const readable = new stream.Readable();
+    readable.push(JSON.stringify(profile.profiles));
+
+    return readable;
+  }
+
+  static write(profile: LauncherProfile) {
+    return new Promise<void>((resolve, reject) => {
+      const stream = fs.createWriteStream(getProfileFilePath());
+
+      const pipeResponse = this.serialize(profile).pipe(stream);
+
+      pipeResponse.on("error", reject);
+
+      pipeResponse.on("close", () => {
+        resolve();
+      });
+    });
+  }
+
+  static read(): Promise<LauncherProfileNode[]> {
+    return new Promise<LauncherProfileNode[]>((resolve, reject) => {
+      const readStream = fs.createReadStream(getProfileFilePath());
+
+      let through = "";
+      readStream.on("data", (chunk) => {
+        isDevelopment() &&
+          `[Asset::ProfileInterceptor] Piping profile data; ${chunk.length}`;
+
+        through += chunk;
+      });
+
+      readStream.on("error", reject);
+      // console.log(through);
+      readStream.on("close", () => resolve(JSON.parse(through)));
+    });
+  }
 }

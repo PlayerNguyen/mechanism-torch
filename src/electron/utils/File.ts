@@ -1,6 +1,7 @@
 import { app } from "electron";
 import { existsSync, mkdirSync } from "fs";
 import path from "path";
+import fs from "fs";
 
 /**
  * The source path
@@ -70,4 +71,11 @@ export abstract class MemoryStorage implements Storage {
 
 export function getManifestFilePath(): string {
   return path.join(getLauncherPath(), "manifest", "manifest.json");
+}
+
+export function getProfileFilePath(): string {
+  const directory = path.join(getLauncherPath(), "profile");
+  if (!fs.existsSync(directory)) fs.mkdirSync(directory);
+
+  return path.join(directory, "Profile.json");
 }
