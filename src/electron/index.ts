@@ -8,7 +8,7 @@ import { createMainBrowserWindow } from "./Window";
   setupLauncherDirectory();
   const configuration = getConfiguration();
   await initManifestData();
-  
+
   app.on("ready", async () => {
     let mainBrowser = createMainBrowserWindow();
 

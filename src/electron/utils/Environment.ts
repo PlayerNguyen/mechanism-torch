@@ -4,9 +4,16 @@ export function isDevelopment(): boolean {
 }
 
 export async function hasConnection(): Promise<boolean> {
-  return new Promise<boolean>((res, rej) => {
+  return new Promise<boolean>((res) => {
     dns.resolve("www.google.com", (err) => {
-      err ? res(false) : res(true);
+      // Debug stdout
+      isDevelopment() &&
+        console.log(`[Environment::hasConnection] Debug connection `, {
+          connection: err ? true : false,
+        });
+
+      // Resolve the promise
+      res(err ? true : false);
     });
   });
 }
