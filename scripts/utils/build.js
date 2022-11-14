@@ -1,6 +1,9 @@
-const { Parcel } = require("@parcel/core");
+// const { Parcel } = require("@parcel/core");
+// const chalk = require("chalk");
 const chalk = require("chalk");
-const { rmdirSync, rmSync } = require("fs");
+const { rmSync } = require("fs");
+const { visibleDiagnostics } = require("./resolver");
+const { Parcel } = require("@parcel/core");
 
 let renderBundler = new Parcel({
   entries: "./src/render/index.html",
@@ -46,10 +49,16 @@ async function buildApplication() {
   // Clean up the dist before build
   cleanUpBuild();
 
-  // Then bundle
-  await bundle(renderBundler, "render");
+  try {
+    await bundle(renderBundler, "render");
 
-  await bundle(mainBundler, "main");
+    await bundle(mainBundler, "main");
+  } catch (err) {
+    console.log(err.stack);
+    if (err.diagnostics) {
+      visibleDiagnostics(err.diagnostics);
+    }
+  }
 }
 
 module.exports = { buildApplication, cleanUpBuild };

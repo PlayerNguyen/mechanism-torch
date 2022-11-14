@@ -1,49 +1,35 @@
-import { app, BrowserWindow, ipcMain } from "electron";
-import { isDevelopment } from "./utils/Environment";
-import path from "path";
-import { getInternalAppPath } from "./utils/File";
+import { app, BrowserWindow } from "electron";
+import { initializeProfile, initializeVersionManifest } from "./assets/Asset";
+import { getConfiguration } from "./configs/Configuration";
+import { setupLauncherDirectory } from "./utils/File";
+import { createMainBrowserWindow } from "./Window";
 
-function createBrowserWindow() {
-  const window = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      devTools: true,
-      preload: path.resolve(
-        getInternalAppPath(),
-        "src",
-        "electron",
-        "preload.js"
-      ),
-    },
+function initializeApplication() {
+  app.on("ready", async () => {
+    setupLauncherDirectory();
+    const configuration = getConfiguration();
+    await initializeVersionManifest();
+    await initializeProfile();
+
+    let mainBrowser = createMainBrowserWindow();
+
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        mainBrowser = createMainBrowserWindow();
+      }
+    });
+
+    app.on("before-quit", () => {
+      // Save the configuration before quit application
+      // configuration.saveTo(getConfigurationFilePath());
+    });
   });
 
-  window.setTitle("Mechanism Torch");
-  ipcMain.handle(`ping`, () => {
-    console.log(`ping from browser`);
-  });
-  // Load the url or file
-  isDevelopment()
-    ? window.loadURL("http://localhost:1234")
-    : window.loadFile(
-        path.resolve(getInternalAppPath(), "dist", "render", "index.html")
-      );
-
-  return window;
-}
-
-app.on("ready", () => {
-  const window = createBrowserWindow();
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createBrowserWindow();
+  app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") {
+      app.quit();
     }
   });
-});
+}
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
-});
+initializeApplication();

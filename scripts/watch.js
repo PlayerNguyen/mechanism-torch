@@ -1,7 +1,8 @@
 const { Parcel } = require("@parcel/core");
 const chalk = require("chalk");
-const { spawnElectron } = require("./start-electron");
-const { cleanUpBuild } = require("./utils/build");
+const { spawnElectron } = require("./start-electron.js");
+const { cleanUpBuild } = require("./utils/build.js");
+const { visibleDiagnostics } = require("./utils/resolver.js");
 
 let renderBundler = new Parcel({
   entries: "./src/render/index.html",
@@ -42,11 +43,16 @@ let mainBundler = new Parcel({
       throw error;
     }
 
+    if (buildEvent.type === "buildFailure") {
+      // console.log(buildEvent.diagnostics);
+      visibleDiagnostics(buildEvent.diagnostics);
+    }
+
     // If the build was success
     if (buildEvent.type === "buildSuccess") {
       const bundles = buildEvent.bundleGraph.getBundles();
 
-      console.clear();
+      // console.clear();
       console.log(
         chalk.bold(
           chalk.green(
@@ -73,6 +79,10 @@ let mainBundler = new Parcel({
       throw err;
     }
 
+    if (e.type === "buildFailure") {
+      visibleDiagnostics(e.diagnostics);
+    }
+
     if (e.type === "buildSuccess") {
       const _process = await spawnElectron();
 
@@ -82,6 +92,4 @@ let mainBundler = new Parcel({
       lastProcess = _process; // Set the last process for caching
     }
   });
-})().finally(() => {
-  console.log(`close gate`);
-});
+})();
