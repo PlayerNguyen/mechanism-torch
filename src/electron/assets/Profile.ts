@@ -8,7 +8,10 @@ interface LauncherProfileNode {
 
 export class LauncherProfile extends JsonSerializable<LauncherProfile> {
   public profiles: LauncherProfileNode[] = [];
-
+  /**
+   * Construct a new
+   * @param profiles a list of profile to load, can be empty
+   */
   constructor(profiles?: LauncherProfileNode[]) {
     super();
     this.profiles = !profiles ? [] : profiles;
@@ -19,13 +22,9 @@ export class LauncherProfile extends JsonSerializable<LauncherProfile> {
   }
 
   removeProfile(
-    predicate: (
-      profile: LauncherProfileNode,
-      index: number,
-      profiles: LauncherProfileNode[]
-    ) => unknown
+    index: number
   ) {
-    this.profiles = this.profiles.filter(predicate);
+    this.profiles = this.profiles.filter((_predicate, _index) => _index !== index);
   }
 
   async loadDefault(latestVersion: string) {
