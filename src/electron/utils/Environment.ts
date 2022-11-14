@@ -9,11 +9,11 @@ export async function hasConnection(): Promise<boolean> {
       // Debug stdout
       isDevelopment() &&
         console.log(`[Environment::hasConnection] Debug connection `, {
-          connection: err ? true : false,
+          connection: err !== null || err !== undefined ? true : false,
         });
-
+      // console.log(err);
       // Resolve the promise
-      res(err ? true : false);
+      res(err !== null || err !== undefined ? true : false);
     });
   });
 }

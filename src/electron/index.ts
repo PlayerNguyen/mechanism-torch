@@ -1,16 +1,16 @@
 import { app, BrowserWindow } from "electron";
 import { initializeProfile, initializeVersionManifest } from "./assets/Asset";
 import { getConfiguration } from "./configs/Configuration";
-import { getConfigurationFilePath, setupLauncherDirectory } from "./utils/File";
+import { setupLauncherDirectory } from "./utils/File";
 import { createMainBrowserWindow } from "./Window";
 
-(async () => {
-  setupLauncherDirectory();
-  const configuration = getConfiguration();
-  await initializeVersionManifest();
-  await initializeProfile();
-
+function initializeApplication() {
   app.on("ready", async () => {
+    setupLauncherDirectory();
+    const configuration = getConfiguration();
+    await initializeVersionManifest();
+    await initializeProfile();
+
     let mainBrowser = createMainBrowserWindow();
 
     app.on("activate", () => {
@@ -21,7 +21,7 @@ import { createMainBrowserWindow } from "./Window";
 
     app.on("before-quit", () => {
       // Save the configuration before quit application
-      configuration.saveTo(getConfigurationFilePath());
+      // configuration.saveTo(getConfigurationFilePath());
     });
   });
 
@@ -30,4 +30,6 @@ import { createMainBrowserWindow } from "./Window";
       app.quit();
     }
   });
-})();
+}
+
+initializeApplication();
