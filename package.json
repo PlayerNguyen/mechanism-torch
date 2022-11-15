@@ -7,7 +7,8 @@
     "watch": "cross-env NODE_ENV=development node ./scripts/watch",
     "start": "node ./scripts/build && node ./scripts/start",
     "build": "node ./scripts/build",
-    "package": "node ./scripts/pack.js"
+    "package": "node ./scripts/pack.js",
+    "test-unit": "cross-env NODE_ENV=testing electron-mocha --main ts-node/register \"test/unit/*.spec.ts\""
   },
   "devDependencies": {
     "@parcel/config-default": "^2.7.0",
@@ -15,10 +16,12 @@
     "@parcel/transformer-sass": "^2.7.0",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.0",
+    "@types/node": "^18.11.9",
     "autoprefixer": "^10.4.13",
     "chai": "^4.3.7",
     "chalk": "4.1.2",
     "cross-env": "^7.0.3",
+    "electron-mocha": "^11.0.2",
     "electron-packager": "^17.1.1",
     "mocha": "^10.1.0",
     "postcss": "^8.4.18",
@@ -27,7 +30,9 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.6.0",
     "react-router-dom": "^6.4.3",
-    "tailwindcss": "^3.2.2"
+    "tailwindcss": "^3.2.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "@types/node-fetch": "2",
