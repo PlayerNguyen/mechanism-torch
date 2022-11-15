@@ -18,21 +18,20 @@ export abstract class JsonInterceptor<T extends JsonSerializable<T>>
   write(object: T, destination: fs.PathLike): Promise<void> {
     return new Promise((res, rej) => {
       const _writer = fs.createWriteStream(destination);
-
-      const r = new stream.Readable();
-      r.push(object.serialize(object));
+      const serializedObject = object.serialize(object);
+      const readable = stream.Readable.from(serializedObject);
 
       isDevelopment() &&
         console.log(
           `[::JsonInterceptor] write `,
-          object.serialize(object),
+          serializedObject,
           `into -> ${destination.toString()}`
         );
 
-      r.pipe(_writer);
-      r.on("error", rej);
+      readable.pipe(_writer);
+      readable.on("error", rej);
 
-      r.on("close", () => {
+      readable.on("close", () => {
         res();
       });
     });

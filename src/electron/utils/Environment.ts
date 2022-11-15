@@ -3,6 +3,10 @@ export function isDevelopment(): boolean {
   return !process.env.NODE_ENV ? false : process.env.NODE_ENV === "development";
 }
 
+export function isTesting(): boolean {
+  return !process.env.NODE_ENV ? false : process.env.NODE_ENV === "testing";
+}
+
 export async function hasConnection(): Promise<boolean> {
   return new Promise<boolean>((res) => {
     dns.resolve("www.google.com", (err) => {

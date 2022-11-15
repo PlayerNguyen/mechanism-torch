@@ -21,10 +21,10 @@ export class LauncherProfile extends JsonSerializable<LauncherProfile> {
     this.profiles = [...this.profiles, profile];
   }
 
-  removeProfile(
-    index: number
-  ) {
-    this.profiles = this.profiles.filter((_predicate, _index) => _index !== index);
+  removeProfile(index: number) {
+    this.profiles = this.profiles.filter(
+      (_predicate, _index) => _index !== index
+    );
   }
 
   async loadDefault(latestVersion: string) {
